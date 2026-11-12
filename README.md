@@ -2,539 +2,216 @@
 
 # StudyLynx
 
-**Find compatible study partners by course, goals, and study style.**
+### Find someone you'd actually want to study with.
+按课程找到同伴，也让第一句话更容易开口。
 
-A mobile-first, high-fidelity front-end prototype for a university study-partner matching app,
-built for the University of Toronto community.
+![Next.js 14](https://img.shields.io/badge/Next.js-14-182640?style=flat-square&logo=nextdotjs&logoColor=white)
+![React 18](https://img.shields.io/badge/React-18-345EB8?style=flat-square&logo=react&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)
+![Prototype](https://img.shields.io/badge/Project-Interaction_prototype-487D71?style=flat-square)
 
-[![Next.js](https://img.shields.io/badge/Next.js-14-black?logo=next.js)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://www.typescriptlang.org/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38bdf8?logo=tailwindcss)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+**[English](#english) | [简体中文](#简体中文)**
 
-English | [中文简体](./README.zh-CN.md)
+[Try the demo](https://cloviszhu.github.io/StudyLynx/) · [Source code](src/) · [Report an issue](https://github.com/cloviszhu/StudyLynx/issues)
 
 </div>
 
----
+## English
 
-## Table of Contents
+Finding someone in your course is a start. You still need to know how they study, what they're working toward, and how to ask them to join you.
 
-- [Introduction](#introduction)
-- [Key Features](#key-features)
-- [Tech Stack](#tech-stack)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Route Map & API](#route-map--api)
-- [Environment Variables](#environment-variables)
-- [Deployment (GitHub Pages)](#deployment-github-pages)
-- [Demo Accounts](#demo-accounts)
-- [Architecture Overview](#architecture-overview)
-- [Contributing](#contributing)
-- [Support & Contact](#support--contact)
+StudyLynx turns that awkward first step into a small, concrete plan: choose a session, see why a partner fits, then edit a conversation starter before sending it. It's a mobile-first interaction prototype built for a university course project.
 
----
+### From a study plan to a conversation
 
-## Introduction
-
-StudyLynx is a clickable prototype that demonstrates how university students can find and connect with compatible study partners. Unlike generic social apps, StudyLynx matches students based on **academic criteria** — shared courses, study goals, preferred study styles, and campus locations.
-
-The prototype preserves the paper prototype's structure and flow while incorporating evaluation-driven usability improvements. It runs entirely in the browser with mock data and `localStorage` persistence — no backend server or database required.
-
-### Why StudyLynx?
-
-- **Academic-focused matching** — not a social or dating app
-- **Trust through verification** — verified student badges, program info, shared courses
-- **Privacy-first** — optional live location sharing with clear consent
-- **Smart scheduling** — weekly availability editor with Google Calendar integration
-- **Guided communication** — preset conversation starters that users can customize before sending
-
----
-
-## Key Features
-
-### Session Management
-- **Create study sessions** with specific dates, time ranges, locations, courses, and goals
-- **Multi-session tracking** with status lifecycle: `Upcoming` → `Matched` → `Confirmed` → `Completed` / `Cancelled`
-- **Unified sessions dashboard** grouped by status with contextual actions per card
-- **Cancel confirmation** inline dialog to prevent accidental cancellation
-
-### Smart Matching
-- **Course-based matching** — prioritizes students in the same course
-- **Multi-criteria scoring** — study style, location proximity, goals, and availability
-- **Top-3 candidates** — browse multiple potential matches before deciding
-- **Recommendation reasons** — visible chips explaining why a match was suggested
-- **Date-aware recommendations** — `getRecommendedSessions` can filter mock sessions by ISO date when a date is provided
-
-### Weekly Availability
-- **7-day availability editor** — toggle days on/off with start and end times
-- **Auto-fill on session creation** — selecting a date pre-populates the time range from your schedule
-- **Profile-level scheduling** — set once, reuse across sessions
-
-### Campus Map
-- **Interactive OpenStreetMap** via Leaflet.js with UofT campus markers
-- **Quick location picker** with recent and favorite locations
-- **Session pins** displayed on the map from the home screen
-
-### Communication
-- **In-app chat** with conversation tab categories: Opening, Alignment, Time-setting, Follow-up, Refusal
-- **Editable prompt chips** — suggested messages populate the input field for customization
-- **Per-partner chat history** persisted across sessions
-
-### Google Integration
-- **Google Sign-In** via OAuth 2.0 when `NEXT_PUBLIC_GOOGLE_CLIENT_ID` is set; otherwise the Google button runs a **demo sign-in** (no `GoogleOAuthProvider` placeholder — avoids issues on static hosts like GitHub Pages)
-- **Google Calendar sync** — one-click export of confirmed sessions with accurate dates and times
-
-### Profile & Partners
-- **Custom avatar upload** with client-side image compression (128x128 JPEG)
-- **Save study partners** for future sessions
-- **View partner profiles** with courses, study habits, and availability
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|-------|-----------|
-| Framework | [Next.js 14](https://nextjs.org/) (App Router) |
-| Language | [TypeScript 5](https://www.typescriptlang.org/) |
-| Styling | [Tailwind CSS 3.4](https://tailwindcss.com/) |
-| Icons | [Lucide React](https://lucide.dev/) |
-| Maps | [Leaflet.js](https://leafletjs.com/) + [OpenStreetMap](https://www.openstreetmap.org/) |
-| Auth (Optional) | [@react-oauth/google](https://www.npmjs.com/package/@react-oauth/google) |
-| State | React Context API + `localStorage` |
-| Data | CSV-based mock users, in-memory mock sessions |
-
----
-
-## Installation
-
-### Prerequisites
-
-- **Node.js** 18+ and **npm** 9+
-- A modern browser (Chrome, Firefox, Edge, Safari)
-
-### One-Click Run (Windows)
-
-Double-click `run.bat`, or from a terminal:
-
-```bash
-.\run.bat
+```mermaid
+flowchart LR
+    Plan["Choose a course<br/>and study plan"] --> Match["Review candidates<br/>and match reasons"]
+    Match --> Decide{"Want to study<br/>together?"}
+    Decide -->|Accept| Chat["Edit an opener<br/>and start a chat"]
+    Decide -->|Pass| Match
+    Chat --> Session["Keep track of<br/>the session"]
+    classDef action fill:#EAF2FF,stroke:#4268B3,color:#172C50,stroke-width:1.5px;
+    classDef choice fill:#E5F3EE,stroke:#45816C,color:#173D32,stroke-width:1.5px;
+    class Plan,Match,Chat,Session action;
+    class Decide choice;
 ```
 
-This automatically installs dependencies on first run, kills any stale dev server on port 3000, and opens the browser.
+| When you're trying to… | What the prototype does |
+| --- | --- |
+| Find someone with a similar plan | Filters session matches by course, then ranks candidates using study style, goals and location. Shows up to three candidates. |
+| Understand a recommendation | Displays reasons such as a shared course or similar study style directly on the session card. |
+| Make first contact | Provides editable prompts for opening a conversation, agreeing on expectations, choosing a time or declining. |
+| Keep plans together | Groups sessions by status, reuses weekly availability and opens a prefilled Google Calendar event. |
+| Return to a good study partner | Saves partners and keeps separate chat histories in the browser. |
 
-### VS Code / Cursor
+The campus map uses Leaflet and OpenStreetMap. Account profiles, matches and conversations use demo data and browser storage. Messages don't reach other people.
 
-`Ctrl+Shift+P` → **Tasks: Run Task** → **Start Study Buddy**
+### Try it
 
-### Manual Setup
+Open the **[live prototype](https://cloviszhu.github.io/StudyLynx/)** and select **Sign in with Google (Demo)** when OAuth isn't configured. Browse a recommendation, create a session, or try the editable chat prompts.
 
-```bash
-# Clone the repository
-git clone https://github.com/JoeZhu-CS/StudyLink.git
-cd StudyLink
+To run it locally, use Node.js 20 and npm, matching the repository's deployment workflow:
 
-# Install dependencies
-npm install
-
-# Start the development server
+```sh
+git clone https://github.com/cloviszhu/StudyLynx.git
+cd StudyLynx
+npm ci
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) — you will be redirected to the login page.
-
-### Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Production build |
-| `npm run start` | Serve production build |
-| `npm run lint` | Run ESLint checks |
-| `npm run clean` | Remove `.next` cache directory |
-
----
-
-## Usage
-
-### Demo Flows
-
-**1. Login → Home → Match → Chat**
-
-Login with a demo account → Land on the home screen → Tap a recommended session card → View match details → Accept → Start chatting with your study partner.
-
-**2. Create a New Session**
-
-Home → Tap the raised "New Session" button → Pick a date (auto-fills from your availability) → Choose a location, course, and study style → Confirm → Automatic matching begins → Review match → Accept or Pass.
-
-**3. Manage Sessions**
-
-Bottom nav "Sessions" tab → View all sessions grouped by status → "Find match" for upcoming, "View match" for matched, "Chat" for confirmed → "Sync to Calendar" to export → Cancel with confirmation dialog.
-
-**4. Set Weekly Availability**
-
-Profile → Scroll to Weekly Availability → Toggle days on/off → Set start and end times per day → Save. This schedule is used when creating new sessions.
-
-**5. Explore & Save Partners**
-
-Home → Browse recommended sessions → Tap to expand → View student profile → "Save Partner" → Access saved partners from the Partners tab anytime.
-
----
-
-## Project Structure
-
-```
-StudyLink/
-├── .github/workflows/
-│   └── deploy-github-pages.yml  # Build static export & deploy to GitHub Pages
-├── public/
-│   ├── .nojekyll                  # Ensures GitHub Pages serves `/_next` (not ignored by Jekyll)
-│   └── users.csv                  # Demo account credentials (email, password, name)
-├── src/
-│   ├── app/                       # Next.js App Router pages
-│   │   ├── layout.tsx             # Root layout with providers (OAuth, Store, RouteGuard)
-│   │   ├── globals.css            # Tailwind layers, CSS variables, custom styles
-│   │   ├── page.tsx               # Root redirect → /login
-│   │   ├── login/page.tsx         # Authentication (email/password, Google, demo)
-│   │   ├── home/page.tsx          # Dashboard with map, sessions summary, recommendations
-│   │   ├── new-session/page.tsx   # Session creation form with date picker
-│   │   ├── matching/page.tsx      # Matching animation + algorithm execution
-│   │   ├── match-found/page.tsx   # Match review with accept/pass/save actions
-│   │   ├── sessions/page.tsx      # Session management dashboard (grouped by status)
-│   │   ├── chat/page.tsx          # In-app messaging with prompt tabs
-│   │   ├── profile/page.tsx       # User profile editor with availability & avatar
-│   │   ├── profile/[userId]/      # Other user's profile view
-│   │   ├── saved-partners/page.tsx# Saved study partners list
-│   │   ├── locations/page.tsx     # Location search and selection
-│   │   ├── browse/page.tsx        # Browse all available sessions
-│   │   └── error/page.tsx         # Error state display
-│   ├── components/                # Reusable UI components
-│   │   ├── MobileFrame.tsx        # Phone-frame viewport wrapper
-│   │   ├── TopBar.tsx             # Navigation bar (back arrow + title/location)
-│   │   ├── BottomNav.tsx          # 5-tab bottom navigation with conditional labels
-│   │   ├── Avatar.tsx             # Unified avatar (initials / image / URL)
-│   │   ├── RouteGuard.tsx         # Auth + profile completion enforcement
-│   │   ├── GoogleOAuthWrapper.tsx # Google OAuth provider only when client ID is set
-│   │   ├── WeeklyAvailabilityEditor.tsx  # 7-day schedule editor
-│   │   ├── MapPreviewCard.tsx     # Dynamic Leaflet map loader
-│   │   ├── CampusMap.tsx          # Interactive campus map with markers
-│   │   ├── SessionCardCollapsed.tsx / SessionCardExpanded.tsx
-│   │   ├── ProfileInfoCard.tsx    # Avatar + name + verification badge
-│   │   ├── SavedPartnerCard.tsx   # Partner card with chat/profile actions
-│   │   ├── ChatComposer.tsx       # Message input with prompt chips
-│   │   ├── BottomSheet.tsx        # Slide-up picker sheet
-│   │   └── InputField.tsx / DropdownField.tsx / SearchableDropdown.tsx / ...
-│   ├── context/
-│   │   └── AppStoreContext.tsx     # Global state (React Context + localStorage)
-│   └── lib/
-│       ├── store-types.ts         # Type definitions, store load/save, versioning
-│       ├── mock-data.ts           # ~20 mock students, 26 mock sessions, matching helpers
-│       ├── auth.ts                # CSV-based authentication
-│       ├── public-path.ts         # basePath-aware URLs for files in `public/` (GitHub Pages)
-│       ├── calendar.ts            # Google Calendar URL builder
-│       ├── image-utils.ts         # Client-side image compression
-│       └── utils.ts               # Tailwind class merge utility (cn)
-├── tailwind.config.ts             # Theme tokens, HSL color system
-├── tsconfig.json                  # TypeScript strict mode, path aliases
-├── next.config.js                 # Static export (`output: 'export'`), optional basePath for Pages
-├── package.json                   # Dependencies and scripts
-└── run.bat                        # Windows one-click launcher
-```
-
----
-
-## Route Map & API
-
-### Pages
-
-| Route | Description | Key Params |
-|-------|-------------|------------|
-| `/login` | Authentication screen | — |
-| `/home` | Dashboard with map and recommendations | `?no-match=1` (toast) |
-| `/new-session` | Create a new study session | — |
-| `/matching` | Match-finding animation | `?sessionId=<id>` or `?from=recommended` |
-| `/match-found` | Review matched partner(s) | `?sessionId=<id>` |
-| `/sessions` | Session management dashboard | — |
-| `/chat` | In-app messaging | `?partner=<studentId>&tab=<tabId>` |
-| `/profile` | Edit own profile | `?new=1` (first-time setup) |
-| `/profile/[userId]` | View another user's profile | — |
-| `/saved-partners` | Saved study partners | — |
-| `/locations` | Location search and picker | — |
-| `/browse` | Browse all available sessions | — |
-| `/error` | Error state | — |
-
-### State Management API
-
-The `useAppStore()` hook exposes:
-
-| Method | Description |
-|--------|-------------|
-| `login(profile)` | Authenticate and set user data |
-| `logout()` | Clear session, reset to defaults |
-| `updateProfile(partial)` | Update user profile fields |
-| `addSession(session)` | Create a new `UserSession`, returns ID |
-| `updateSessionStatus(id, status, matchedWith?)` | Transition session lifecycle |
-| `removeSession(id)` | Delete a session |
-| `getSessionById(id)` | Look up a session |
-| `setMatchedPartner(partner)` | Store current match result |
-| `setMatchedPartners(partners)` | Store top-N match candidates |
-| `addSavedPartner(partner)` | Save a study partner |
-| `removeSavedPartner(id)` | Remove a saved partner |
-| `getChatMessages(partnerId)` | Retrieve chat history |
-| `addChatMessage(partnerId, msg)` | Append a chat message |
-| `resetStore()` | Factory reset all data |
-
-### Data Models
+Open [localhost:3000](http://localhost:3000). The demo doesn't need an API key.
 
 <details>
-<summary><strong>UserSession</strong></summary>
+<summary><strong>Inside the prototype: architecture, matching and source map</strong></summary>
 
-```typescript
-interface UserSession {
-  id: string
-  date: string          // "YYYY-MM-DD"
-  startTime: string     // "HH:MM" (24h)
-  endTime: string       // "HH:MM" (24h)
-  location: string
-  subject: string
-  studyStyle: string
-  goals: string
-  status: "upcoming" | "matched" | "confirmed" | "completed" | "cancelled"
-  matchedWith?: {
-    studentId: string
-    sessionId: string
-  } | null
-}
+```mermaid
+flowchart TB
+    Routes["Next.js App Router<br/>Pages and reusable components"] --> Store["React Context<br/>Profiles, sessions and chat"]
+    Store <--> Local[("localStorage")]
+    Routes --> Matching["Mock session matcher<br/>Course filter and weighted ranking"]
+    Routes --> Map["Leaflet campus map"]
+    Routes --> Calendar["Google Calendar event URL"]
+    Routes -. optional .-> Google["Google sign-in"]
+    classDef ui fill:#EAF2FF,stroke:#4268B3,color:#172C50;
+    classDef data fill:#E5F3EE,stroke:#45816C,color:#173D32;
+    class Routes,Matching,Map,Calendar,Google ui;
+    class Store,Local data;
 ```
+
+Session matching requires the same course. The ranking then adds weight for study style, a shared goal and location; the first three results become candidates. The separate recommendation feed attaches reason labels to matching attributes. Both paths use the mock dataset.
+
+| Read this file | To understand |
+| --- | --- |
+| [src/lib/mock-data.ts](src/lib/mock-data.ts) | Candidate ranking, recommendation reasons and chat prompts |
+| [src/context/AppStoreContext.tsx](src/context/AppStoreContext.tsx) | State changes across profiles, sessions and conversations |
+| [src/lib/store-types.ts](src/lib/store-types.ts) | Data types, browser persistence and store versioning |
+| [src/components/RouteGuard.tsx](src/components/RouteGuard.tsx) | Login and profile-completion routing |
+| [src/lib/calendar.ts](src/lib/calendar.ts) | Dates and times in the prefilled calendar URL |
 
 </details>
 
 <details>
-<summary><strong>UserProfile</strong></summary>
+<summary><strong>Build, hosting and prototype boundaries</strong></summary>
 
-```typescript
-interface UserProfile {
-  name: string
-  avatar: string
-  email: string
-  subject: string
-  programType: string
-  level: string
-  year: number
-  courses: string
-  preferredTime: string
-  weeklyAvailability?: WeeklyAvailability
-  habits: string
-  bio: string
-  defaultLocation: string
-  studentId?: string
-}
+```sh
+npm run lint
+npm run build
 ```
+
+The build exports a static site to `out/`. Serve that directory over HTTP for a production preview. This project sets `output: "export"`, so `next start` isn't the preview path for the exported site.
+
+[The GitHub Pages workflow](.github/workflows/deploy-github-pages.yml) sets `NEXT_PUBLIC_BASE_PATH` to the repository path and deploys the export. Optional Google sign-in uses `NEXT_PUBLIC_GOOGLE_CLIENT_ID`. Without it, the Google button opens a demo session.
+
+Calendar export opens an event creation page; it doesn't perform background calendar synchronization. Student verification badges and account flows illustrate the design. The repository doesn't provide production identity verification, shared server storage or real-time messaging. Don't enter sensitive personal information into the demo.
+
+</details>
+
+### Research and contribution
+
+A five-person course team studied how students find study partners through questionnaires, semi-structured interviews and prototype evaluation. The team produced personas, design requirements, paper prototypes and three research reports.
+
+Hongyu Zhu participated in the research and interaction design and was the primary developer of the high-fidelity web prototype. Cognitive walkthroughs and usability testing informed iteration. The project makes no claim about commercial adoption or measured improvements in matching success.
+
+[Read in 简体中文](#简体中文)
+
+---
+
+## 简体中文
+
+找到同一门课的同学，只是开始。对方喜欢安静自习还是边学边聊？这次想补进度，还是准备考试？第一句话又该怎么说？
+
+StudyLynx 把这些顾虑放进一次具体的学习安排：先选场次，看看匹配理由，再编辑一句开场白。它是一个以手机界面为主的课程交互原型。
+
+### 从学习安排到第一次交流
+
+```mermaid
+flowchart LR
+    Plan["选择课程<br/>和学习安排"] --> Match["查看候选同伴<br/>与匹配理由"]
+    Match --> Decide{"想一起学吗？"}
+    Decide -->|接受| Chat["编辑开场白<br/>开始聊天"]
+    Decide -->|跳过| Match
+    Chat --> Session["跟进学习场次"]
+    classDef action fill:#EAF2FF,stroke:#4268B3,color:#172C50,stroke-width:1.5px;
+    classDef choice fill:#E5F3EE,stroke:#45816C,color:#173D32,stroke-width:1.5px;
+    class Plan,Match,Chat,Session action;
+    class Decide choice;
+```
+
+| 你想做什么 | 原型如何支持 |
+| --- | --- |
+| 找到学习安排相近的人 | 先按课程筛选，再按学习风格、目标和地点排序，展示最多三位候选。 |
+| 理解推荐理由 | 在场次卡片上直接显示共同课程、相近学习风格等标签。 |
+| 迈出第一次联系 | 提供可编辑的话题提示，覆盖开场、对齐预期、约时间和婉拒。 |
+| 管理学习安排 | 按状态整理场次，复用每周空闲时间，并打开预填的 Google 日历事件。 |
+| 再次联系合适的同伴 | 收藏学习搭子，在浏览器中分别保存聊天记录。 |
+
+校园地图使用 Leaflet 与 OpenStreetMap。资料、匹配和聊天采用演示数据与浏览器存储；消息不会发送给其他人。
+
+### 立即体验
+
+打开 **[在线原型](https://cloviszhu.github.io/StudyLynx/)**。未配置 OAuth 时，点击 **Sign in with Google (Demo)** 即可进入。可以先浏览推荐，再创建场次，试试聊天中的可编辑提示。
+
+本地运行使用 Node.js 20 与 npm，与仓库部署工作流一致：
+
+```sh
+git clone https://github.com/cloviszhu/StudyLynx.git
+cd StudyLynx
+npm ci
+npm run dev
+```
+
+打开 [localhost:3000](http://localhost:3000)。演示无需 API key。
+
+<details>
+<summary><strong>实现细节：架构、匹配逻辑与源码入口</strong></summary>
+
+```mermaid
+flowchart TB
+    Routes["Next.js App Router<br/>页面与复用组件"] --> Store["React Context<br/>资料、场次和聊天"]
+    Store <--> Local[("localStorage")]
+    Routes --> Matching["模拟场次匹配<br/>课程筛选与加权排序"]
+    Routes --> Map["Leaflet 校园地图"]
+    Routes --> Calendar["Google 日历事件链接"]
+    Routes -. 可选 .-> Google["Google 登录"]
+    classDef ui fill:#EAF2FF,stroke:#4268B3,color:#172C50;
+    classDef data fill:#E5F3EE,stroke:#45816C,color:#173D32;
+    class Routes,Matching,Map,Calendar,Google ui;
+    class Store,Local data;
+```
+
+场次匹配要求课程相同，再根据学习风格、共同目标和地点加权，取前三个结果。推荐信息流另行生成理由标签。两条流程都使用模拟数据。
+
+| 源码 | 阅读重点 |
+| --- | --- |
+| [src/lib/mock-data.ts](src/lib/mock-data.ts) | 候选排序、推荐理由和聊天提示 |
+| [src/context/AppStoreContext.tsx](src/context/AppStoreContext.tsx) | 资料、场次和会话之间的状态变化 |
+| [src/lib/store-types.ts](src/lib/store-types.ts) | 类型定义、浏览器持久化和存储版本 |
+| [src/components/RouteGuard.tsx](src/components/RouteGuard.tsx) | 登录与资料补全的路由控制 |
+| [src/lib/calendar.ts](src/lib/calendar.ts) | 日历链接中的日期与时间 |
 
 </details>
 
 <details>
-<summary><strong>WeeklyAvailability</strong></summary>
+<summary><strong>构建、托管与原型范围</strong></summary>
 
-```typescript
-type DayKey = "mon" | "tue" | "wed" | "thu" | "fri" | "sat" | "sun"
-
-interface DayAvailability {
-  enabled: boolean
-  start: string   // "HH:MM"
-  end: string     // "HH:MM"
-}
-
-type WeeklyAvailability = Record<DayKey, DayAvailability>
+```sh
+npm run lint
+npm run build
 ```
+
+构建将静态站点导出到 `out/`，通过 HTTP 服务预览该目录。项目配置了 `output: "export"`，因此导出站点不使用 `next start` 预览。
+
+[GitHub Pages 工作流](.github/workflows/deploy-github-pages.yml) 将 `NEXT_PUBLIC_BASE_PATH` 设为仓库路径后发布静态产物。可选的 Google 登录使用 `NEXT_PUBLIC_GOOGLE_CLIENT_ID`；未配置时，按钮进入演示会话。
+
+日历功能会打开预填的事件创建页，不会在后台持续同步。学生认证徽章与账户流程用于展示交互设计；仓库没有提供生产级身份核验、共享服务端存储或实时通信。演示中请勿填写敏感个人信息。
 
 </details>
 
----
+### 研究与个人贡献
 
-## Environment Variables
+五人课程团队通过问卷、半结构化访谈与原型评估研究学生寻找学习搭子的过程，形成用户角色、设计需求、纸质原型和三份研究报告。
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | No | Google OAuth Client ID for Sign-In and Calendar. If not set, the app falls back to demo mode with full functionality. |
+朱泓宇参与用户研究与交互设计，主要负责高保真 Web 原型开发，并结合认知走查和可用性测试迭代。项目不宣称商业采用情况或匹配成功率提升。
 
-To configure Google OAuth:
-
-1. Create a project in [Google Cloud Console](https://console.cloud.google.com/)
-2. Enable the **Google Identity Services** API
-3. Create an OAuth 2.0 Client ID (Web application type)
-4. Add `http://localhost:3000` to Authorized JavaScript origins
-5. Create `.env.local` at the project root:
-
-```env
-NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-```
-
-> **Note:** The app works fully without this variable. Google Sign-In and Calendar sync will use demo/URL-based fallbacks.
-
----
-
-## Deployment (GitHub Pages)
-
-This app is a **static export** (`next build` → `out/`) and can be hosted on [GitHub Pages](https://pages.github.com/) for free. The live URL looks like:
-
-`https://<your-username>.github.io/<repository-name>/`
-
-### One-time repository setup
-
-1. On GitHub, open the repo → **Settings** → **Pages**.
-2. Under **Build and deployment** → **Source**, choose **GitHub Actions** (not “Deploy from a branch”).
-3. Save.
-
-### Automatic deploy
-
-The workflow [`.github/workflows/deploy-github-pages.yml`](.github/workflows/deploy-github-pages.yml) runs on every push to `main` or `master`. It:
-
-- Sets `NEXT_PUBLIC_BASE_PATH` to `/<repository-name>` so assets and routes work under the project URL.
-- Uploads the `out/` folder and publishes it with the official Pages deploy action.
-
-After the first successful run, open **Actions** → latest **Deploy to GitHub Pages** → the **deploy** job shows the **page URL**.
-
-`RouteGuard` strips `NEXT_PUBLIC_BASE_PATH` and trailing slashes so public routes like `/login` work under `https://user.github.io/repo/login/`.
-
-### Local production build (with subpath)
-
-To mimic GitHub Pages locally:
-
-```bash
-# Windows PowerShell
-$env:NEXT_PUBLIC_BASE_PATH="/YourRepoName"; npm run build
-npx serve out
-```
-
-Then open the printed URL (add `/YourRepoName/` at the end if needed).
-
-### Google OAuth on GitHub Pages
-
-If you use Google Sign-In, add your production origin to the OAuth client in Google Cloud Console, for example:
-
-`https://your-username.github.io`
-
----
-
-## Demo Accounts
-
-Authentication uses a CSV file (`public/users.csv`). Any of these accounts work:
-
-| Email | Password | Name |
-|-------|----------|------|
-| `demo@utoronto.ca` | `demo123` | Demo User |
-| `alex@mail.utoronto.ca` | `alex123` | Alex Chen |
-| `diego@mail.utoronto.ca` | `diego123` | Diego Zhu |
-| `jordan@mail.utoronto.ca` | `jordan123` | Jordan Lee |
-| `sam@mail.utoronto.ca` | `sam123` | Sam Patel |
-| `maya@mail.utoronto.ca` | `maya123` | Maya Kim |
-
-If Google OAuth is not configured, use **Sign in with Google (Demo)** on the login screen for a one-click demo session.
-
-New accounts can be registered with any email — they will be guided through profile setup before accessing the app.
-
----
-
-## Architecture Overview
-
-```
-┌─────────────────────────────────────────────────┐
-│                   Browser                       │
-├─────────────────────────────────────────────────┤
-│  GoogleOAuthWrapper                             │
-│  └─ AppStoreProvider (React Context)            │
-│     └─ MobileFrame (phone viewport)             │
-│        └─ RouteGuard (auth + profile check)     │
-│           └─ Page Routes (App Router)           │
-│              └─ TopBar + Content + BottomNav    │
-├─────────────────────────────────────────────────┤
-│  localStorage (study-buddy-store, version: 2)   │
-│  ├─ User profile & preferences                 │
-│  ├─ Sessions (UserSession[])                    │
-│  ├─ Matched partners                            │
-│  ├─ Saved partners                              │
-│  └─ Chat messages (per-partner)                 │
-├─────────────────────────────────────────────────┤
-│  Mock Data Layer                                │
-│  ├─ ~20 students with weekly availability       │
-│  ├─ 26 sessions with dynamic future dates       │
-│  ├─ CSV-based authentication                    │
-│  └─ Matching algorithms (course, style, goal)   │
-└─────────────────────────────────────────────────┘
-```
-
-### State Persistence
-
-- All user data is stored in `localStorage` under the key `study-buddy-store`
-- Store versioning (`v2`) ensures automatic migration from older formats
-- Corrupted or outdated data is silently cleared on load
-- `resetStore()` performs a factory reset of all persisted data
-
-### Route Protection
-
-The `RouteGuard` component enforces:
-1. **Unauthenticated users** → redirected to `/login`
-2. **Logged in but incomplete profile** → redirected to `/profile?new=1`
-3. **Public routes** (`/login`, `/`) bypass all checks
-4. **Subpath deployments** — strips `NEXT_PUBLIC_BASE_PATH` and trailing slashes so `/repo/login/` is treated like `/login`
-
----
-
-## Contributing
-
-We welcome contributions! Here's how to get started:
-
-1. **Fork** the repository
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. **Make your changes** — follow the existing code style:
-   - TypeScript strict mode
-   - Tailwind CSS for all styling
-   - Functional components with hooks
-   - `"use client"` directive for client components
-4. **Test locally**
-   ```bash
-   npm run build   # Ensure no build errors
-   npm run lint     # Ensure no lint errors
-   ```
-5. **Commit with a descriptive message**
-   ```bash
-   git commit -m "feat: add your feature description"
-   ```
-6. **Push and create a Pull Request**
-   ```bash
-   git push origin feature/your-feature-name
-   ```
-
-### Commit Convention
-
-We follow [Conventional Commits](https://www.conventionalcommits.org/):
-
-| Prefix | Usage |
-|--------|-------|
-| `feat:` | New feature |
-| `fix:` | Bug fix |
-| `refactor:` | Code restructuring (no behavior change) |
-| `docs:` | Documentation only |
-| `style:` | Formatting, whitespace |
-| `chore:` | Build tools, dependencies |
-
----
-
-## Support & Contact
-
-- **Issues**: [GitHub Issues](https://github.com/JoeZhu-CS/StudyLink/issues)
-- **Repository**: [github.com/JoeZhu-CS/StudyLink](https://github.com/JoeZhu-CS/StudyLink)
-
----
-
-<div align="center">
-
-Built with Next.js, TypeScript, and Tailwind CSS for the University of Toronto.
-
-</div>
+[Back to English](#english)
